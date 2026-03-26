@@ -141,7 +141,7 @@ pip install -r requirements.txt
 ### 4. Set up environment
 Create `backend/.env` file:
 ```
-GROQ_API_KEY=your_groq_api_key_here
+GROQ_API_KEY="key"
 ```
 
 ### 5. Generate sample dataset
@@ -294,15 +294,10 @@ Expected: **15 passed**
 
 ---
 
-## 📄 License
-
-MIT License — free to use, modify, and distribute.
-
----
 
 ## 👤 Author
 
-Built as an AI Engineer portfolio project demonstrating RAG architecture, end-to-end ML pipelines, NLP, and production deployment.
+Sami Noor Saifi
 
 ---
 
