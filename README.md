@@ -1,18 +1,15 @@
+
 # 🎓 EduMind AI — Intelligent School Learning Platform
 
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq-Llama--3-F55036?style=for-the-badge)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-1.5-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Groq](https://img.shields.io/badge/Groq-Llama--3-F55036?style=for-the-badge)](https://console.groq.com)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.5-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
 
 **An end-to-end AI platform for school education — RAG-powered Q&A, ML performance prediction, and adaptive topic recommendations.**
 
 [Features](#-features) • [Architecture](#-architecture) • [Quick Start](#-quick-start) • [API Reference](#-api-reference) • [Docker](#-docker-deployment)
-
-</div>
 
 ---
 
@@ -30,13 +27,13 @@
 - Trained on 8,000 synthetic student records with realistic correlations
 - Predicts grade (F → A+), risk level, and expected score
 - 4 engineered features: study×attendance, prev×assignments, consistency score
-- Personalized improvement recommendations per student
+- Personalised improvement recommendations per student
 
 ### 🗺️ Adaptive Topic Recommender
 - Content-based filtering using **TF-IDF cosine similarity**
 - Covers NCERT curriculum for Grades 6–10 across 5 subjects
-- Prioritizes weak subjects, skips completed topics
-- Generates complete **7-day personalized study plan**
+- Prioritises weak subjects, skips completed topics
+- Generates complete **7-day personalised study plan**
 
 ### ⚡ Production Backend
 - **FastAPI** REST API with auto-generated Swagger docs at `/docs`
@@ -53,9 +50,6 @@
 edumind-ai/
 ├── backend/
 │   ├── main.py                     # FastAPI app + lifespan + middleware
-│   ├── config.py                   # Centralized settings (Windows-safe paths)
-│   ├── middleware.py               # Request logging + error handlers
-│   ├── .env                        # GROQ_API_KEY (not committed to git)
 │   ├── routers/
 │   │   ├── rag.py                  # POST /api/rag/ingest, /ask, /status
 │   │   ├── predict.py              # POST /api/predict/performance
@@ -70,13 +64,15 @@ edumind-ai/
 │   └── index.html                  # Pure HTML/CSS/JS — no framework needed
 ├── data/
 │   ├── generate_dataset.py         # Generates sample_students.csv
-│   └── sample_students.csv         # 500 student records
+│   └── sample_students.csv         # 500 student records (after generation)
 ├── notebooks/
 │   └── EDA_Student_Performance.ipynb
 ├── tests/
 │   └── test_services.py            # 15 unit tests (pytest)
 ├── .github/
 │   └── workflows/ci.yml            # GitHub Actions CI/CD
+├── config.py                       # Centralized settings
+├── middleware.py                   # Request logging + error handlers
 ├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
@@ -144,7 +140,7 @@ pip install -r requirements.txt
 
 ### 4. Set up environment
 Create `backend/.env` file:
-```env
+```
 GROQ_API_KEY=your_groq_api_key_here
 ```
 
@@ -169,10 +165,7 @@ INFO: Uvicorn running on http://127.0.0.1:8000
 ```
 
 ### 7. Open the frontend
-Open `frontend/index.html` in your browser, or use VS Code Live Server at:
-```
-http://127.0.0.1:5500/frontend/index.html
-```
+Open `frontend/index.html` in your browser.
 
 ### 8. Access API docs
 Visit **http://localhost:8000/docs** for interactive Swagger UI
@@ -186,28 +179,10 @@ Visit **http://localhost:8000/docs** for interactive Swagger UI
 docker-compose up --build
 ```
 
-First build takes 5-10 minutes.
-
-### Services
 | Service | Port | Description |
-|---|---|---|
+|---------|------|-------------|
 | `edumind-backend` | 8000 | FastAPI REST API |
-| `edumind-frontend` | 8501 | Streamlit UI |
-
-### Useful Docker commands
-```bash
-# Start in background
-docker-compose up -d
-
-# View logs
-docker logs edumind-backend
-
-# Stop all
-docker-compose down
-
-# Rebuild after code changes
-docker-compose up --build
-```
+| `edumind-frontend` | 8501 | Static file server |
 
 ---
 
@@ -216,52 +191,37 @@ docker-compose up --build
 ### RAG Q&A
 
 #### Upload PDF
-```http
+```
 POST /api/rag/ingest
 Content-Type: multipart/form-data
 file: <pdf_file>
 ```
 ```json
-{
-  "status": "success",
-  "filename": "ncert_science.pdf",
-  "chunks_indexed": 142
-}
+{ "status": "success", "filename": "ncert_science.pdf", "chunks_indexed": 142 }
 ```
 
 #### Ask Question
-```http
+```
 POST /api/rag/ask
-Content-Type: application/json
-
-{
-  "question": "What is photosynthesis?",
-  "top_k": 3
-}
+{ "question": "What is photosynthesis?", "top_k": 3 }
 ```
 ```json
 {
   "answer": "Photosynthesis is the process by which...",
   "sources": ["ncert_science.pdf"],
   "confidence": 0.87,
-  "model_used": "Llama-3 (Groq)"
+  "model_used": "Llama-3 (Groq)",
+  "response_time_ms": 1240.5
 }
 ```
 
 ### Performance Prediction
-
-```http
+```
 POST /api/predict/performance
-Content-Type: application/json
-
 {
-  "attendance_pct": 85,
-  "study_hours_per_day": 3.5,
-  "prev_exam_score": 72,
-  "assignments_completed_pct": 80,
-  "sleep_hours": 7,
-  "extracurricular_activities": 2,
-  "subject": "Math"
+  "attendance_pct": 85, "study_hours_per_day": 3.5,
+  "prev_exam_score": 72, "assignments_completed_pct": 80,
+  "sleep_hours": 7, "extracurricular_activities": 2, "subject": "Math"
 }
 ```
 ```json
@@ -270,59 +230,33 @@ Content-Type: application/json
   "predicted_score": 76.4,
   "risk_level": "Low",
   "recommendations": ["Increase study time to 4+ hours for grade A."],
-  "feature_importance": {
-    "prev_exam_score": 0.28,
-    "attendance_pct": 0.22
-  }
+  "feature_importance": { "prev_exam_score": 0.28, "attendance_pct": 0.22 }
 }
 ```
 
 ### Topic Recommendation
-
-```http
-POST /api/recommend/topics
-Content-Type: application/json
-
-{
-  "student_id": "STU001",
-  "completed_topics": ["Integers", "Fractions"],
-  "weak_subjects": ["Math"],
-  "grade_level": 9,
-  "learning_style": "visual"
-}
 ```
-```json
+POST /api/recommend/topics
 {
-  "recommended_topics": [...],
-  "daily_study_plan": {
-    "Monday": ["Polynomials", "Linear Equations"]
-  },
-  "motivational_message": "Consistency beats talent. Keep showing up!"
+  "student_id": "STU001", "completed_topics": ["Integers"],
+  "weak_subjects": ["Math"], "grade_level": 9, "learning_style": "visual"
 }
 ```
 
 ---
 
 ## 🧪 Running Tests
-
 ```bash
 pytest tests/ -v
 ```
-
-Expected output:
-```
-tests/test_services.py::TestPredictService::test_predict_returns_valid_grade PASSED
-tests/test_services.py::TestRecommendService::test_returns_recommendations PASSED
-...
-15 passed in 12.3s
-```
+Expected: **15 passed**
 
 ---
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Purpose |
-|---|---|---|
+|-------|-----------|---------|
 | **API** | FastAPI 0.111 | REST endpoints, Swagger docs |
 | **ML** | scikit-learn, GradientBoosting + RandomForest | Performance prediction |
 | **Embeddings** | Sentence Transformers (all-MiniLM-L6-v2) | Semantic search |
@@ -331,7 +265,7 @@ tests/test_services.py::TestRecommendService::test_returns_recommendations PASSE
 | **PDF Parsing** | PyPDF2 | Document ingestion |
 | **Frontend** | HTML / CSS / JS | Zero-dependency UI |
 | **Validation** | Pydantic v2 | Request/response schemas |
-| **DevOps** | Docker, GitHub Actions | Containerization + CI/CD |
+| **DevOps** | Docker, GitHub Actions | Containerisation + CI/CD |
 | **Testing** | pytest | 15 unit tests |
 
 ---
@@ -339,46 +273,24 @@ tests/test_services.py::TestRecommendService::test_returns_recommendations PASSE
 ## 📊 Model Performance
 
 | Metric | Value |
-|---|---|
+|--------|-------|
 | Algorithm | GradientBoosting + RandomForest Ensemble |
 | Training samples | 8,000 |
 | Test accuracy | **88-90%** |
-| Features used | 11 (7 raw + 4 engineered) |
+| Features used | 10 (6 raw + 4 engineered) |
 | Top predictor | Previous exam score (28%) |
-
-### Feature Engineering
-| Feature | Formula | Why |
-|---|---|---|
-| `study_x_attendance` | study × attendance / 100 | Captures joint consistency |
-| `prev_x_assignments` | prev_score × assignments / 100 | Past + present effort |
-| `sleep_study_ratio` | sleep / study_hours | Balance indicator |
-| `consistency_score` | (attendance + assignments) / 2 | Overall habit score |
 
 ---
 
 ## 🔧 Common Issues & Fixes
 
 | Error | Fix |
-|---|---|
+|-------|-----|
 | `fbgemm.dll not found` | `pip install torch --index-url https://download.pytorch.org/whl/cpu` |
 | `Cannot import module main` | `cd backend` before running uvicorn |
 | `Groq proxies error` | `pip install groq==0.11.0` |
 | `No GROQ_API_KEY` | Create `backend/.env` with your key |
 | `Port 8000 in use` | `uvicorn main:app --port 8001` |
-| `Model accuracy 5%` | Run `Remove-Item "$env:TEMP\edumind_model*"` and restart |
-
----
-
-## 🎤 Interview Talking Points
-
-**"Walk me through your project"**
-> EduMind AI is an end-to-end intelligent school learning platform with three AI modules: a RAG-based Q&A system where students upload NCERT PDFs and ask questions answered by Llama-3 via Groq, a GradientBoosting + RandomForest ensemble that predicts student grades at 89% accuracy, and a TF-IDF content-based recommender generating adaptive 7-day study plans. The backend is FastAPI served via uvicorn, containerized with Docker, and has CI/CD through GitHub Actions.
-
-**"How does your RAG pipeline work?"**
-> I parse PDFs with PyPDF2, create 250-word overlapping chunks, embed them with Sentence Transformers' all-MiniLM-L6-v2, and store normalized embeddings in a FAISS flat inner-product index. At query time I embed the question, retrieve top-K chunks by cosine similarity, and pass them as context to Llama-3 via Groq for answer generation. I return confidence scores based on retrieval similarity scores.
-
-**"Why GradientBoosting for performance prediction?"**
-> It handles non-linear feature interactions natively, is robust to outliers, and provides feature importance which is critical for explainability in EdTech — teachers need to understand why a student is at risk. I also engineered interaction features like study×attendance to capture compounding effects, which boosted accuracy from 62% to 89%.
 
 ---
 
@@ -394,6 +306,4 @@ Built as an AI Engineer portfolio project demonstrating RAG architecture, end-to
 
 ---
 
-<div align="center">
-⭐ <strong>Star this repo if it helped you!</strong>
-</div>
+⭐ **Star this repo if it helped you!**
